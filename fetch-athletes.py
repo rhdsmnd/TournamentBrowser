@@ -120,8 +120,8 @@ eventsMap = {}
 for event in events:
     eventsMap[event.get('ibjjfId')] = event
 
-# for event in events:
-#     readAthleteData(event)
+for event in events:
+    readAthleteData(event)
 # print(json.dumps(athletes, indent=4))
 
 @route('/')
