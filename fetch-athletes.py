@@ -14,7 +14,7 @@ athleteRegex = re.compile(r"(?P<belt>.*)/(?P<age>.*)/(?P<gender>.*)/\s+(?P<weigh
 
 maleBrackets = 'https://www.bjjcompsystem.com/tournaments/{}/categories?gender_id=1'
 femaleBrackets = 'https://www.bjjcompsystem.com/tournaments/{}/categories?gender_id=2'
-bracketXpath = '//a[./div/div[contains(., \'{}\')] and //*[contains(., \'{}\') and contains(., \'{}\')]]'
+bracketXpath = '//a[./div/div[contains(., \'{}\')] and ./div/div[contains(., \'{}\')] and ./div/div/span//text()[normalize-space(.)=\'{}\']]'
 
 
 def fetchAthletes(browser, eventIds):
@@ -56,9 +56,10 @@ def addBrackets(browser, athletes, eventIds):
     for athlete in athletes:
         if athlete['gender'] != 'Male':
             continue
-        # print(athlete)
+        # print(athlete.get("name"))
         try:
-            bracketURL = browser.find_element(By.XPATH, bracketXpath.format(athlete['age'], athlete['belt'], athlete['weightclass'].replace("-", " ")))
+            bracketURL = browser.find_element(By.XPATH, bracketXpath.format(athlete['age'], athlete['belt'],
+                                                                            athlete['weightclass'].replace("-", " ")))
             athlete['bracket'] = bracketURL.get_attribute('href')
         except NoSuchElementException:
             print("Could not find bracket url for athlete: {}".format(athlete['name']))
@@ -73,6 +74,7 @@ def addBrackets(browser, athletes, eventIds):
             athlete['bracket'] = bracketURL.get_attribute('href')
         except NoSuchElementException:
             print("Could not find bracket url for athlete: {}".format(athlete['name']))
+
 
 def readAthleteData(eventIds, force = False):
     ibjjfEventId = eventIds['ibjjfId']
